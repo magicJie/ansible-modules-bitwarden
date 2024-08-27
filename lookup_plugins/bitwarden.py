@@ -14,6 +14,7 @@ import json
 import os
 import sys
 import uuid
+import logging
 
 from subprocess import Popen, PIPE, STDOUT, check_output
 
@@ -266,12 +267,13 @@ class Bitwarden(object):
             else:
                 raise err
 
-
-
-
 class LookupModule(LookupBase):
 
     def run(self, terms, variables=None, **kwargs):
+        # load the bw_session from vars if under container environment
+        bw_session = variables.get('bw_session',None)
+        if bw_session is not None:
+            os.environ['BW_SESSION'] = bw_session
         bw = Bitwarden(path=kwargs.get('path', 'bw'))
 
         if not bw.logged_in:
