@@ -128,7 +128,7 @@ class Bitwarden(object):
             else:
                 raise AnsibleError("Unknown failure in 'bw' command: "
                                    "{0}".format(out))
-        return out.strip()
+        return out.strip().replace('mac failed.\n','') # some times output mac failed,maybe is a bug,just remove it...
 
     def sync(self):
         self._run(['sync'])
